@@ -5,7 +5,6 @@ import AirtableService from '~/server/services/airtable/airtable'
 // Load environment variables from .env file
 config()
 
-// Integration tests - sử dụng Airtable thật
 describe('AirtableService - Integration Tests', () => {
   let service: AirtableService
   
@@ -13,7 +12,6 @@ describe('AirtableService - Integration Tests', () => {
     console.log('AIRTABLE_ACCESS_TOKEN:', process.env.AIRTABLE_ACCESS_TOKEN ? 'Found' : 'Not found')
     console.log('AIRTABLE_BASE_ID:', process.env.AIRTABLE_BASE_ID)
     
-    // Skip nếu không có credentials
     if (!process.env.AIRTABLE_ACCESS_TOKEN || !process.env.AIRTABLE_BASE_ID) {
       console.log('⚠️  Skipping integration tests - missing Airtable credentials')
       console.log('Set AIRTABLE_ACCESS_TOKEN and AIRTABLE_BASE_ID in .env file')
@@ -46,8 +44,7 @@ describe('AirtableService - Integration Tests', () => {
       return
     }
     
-    // Thay 'Table 1' bằng tên table thật trong base của bạn
-    const tableName = 'Table 1'
+    const tableName = 'Emailing'
     const table = service.getTable(tableName)
     
     expect(table).toBeDefined()
