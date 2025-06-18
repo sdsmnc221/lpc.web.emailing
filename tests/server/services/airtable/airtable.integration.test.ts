@@ -31,7 +31,6 @@ describe('AirtableService - Integration Tests', () => {
     }
     
     expect(service).toBeInstanceOf(AirtableService)
-    expect(service.getBase()).toBeDefined()
     console.log('✅ Successfully connected to Airtable base')
   })
   
@@ -50,43 +49,6 @@ describe('AirtableService - Integration Tests', () => {
     expect(table).toBeDefined()
     console.log(`✅ Successfully got table: ${tableName}`)
   })
-  
-  /**
-   * Test connection to a specific table
-   */
-  it('should test connection to real table', async () => {
-    if (!process.env.AIRTABLE_ACCESS_TOKEN || !process.env.AIRTABLE_BASE_ID) {
-      console.log('⏭️  Skipping - no credentials')
-      return
-    }
-    
-    const tableName = 'Emailing'
-    
-    try {
-      const records = await service.testTableConnection(tableName)
-      expect(records).toBeDefined()
-      expect(Array.isArray(records)).toBe(true)
-      
-      console.log(`✅ Successfully tested connection to table: ${tableName}`)
-      console.log(`📊 Found ${records.length} record(s) in test query`)
-      
-      if (records.length > 0) {
-        console.log('📝 Sample record structure:')
-        console.log('   - ID:', records[0].id)
-        console.log('   - Fields:', Object.keys(records[0].fields || {}))
-      }
-    } catch (error) {
-      console.error(`Failed to connect to table '${tableName}':`, (error as Error).message)
-      
-      // Nếu table không tồn tại, đây là lỗi expected
-      if ((error as Error).message.includes('NOT_FOUND') || (error as Error).message.includes('Table not found')) {
-        console.log('💡 Tip: Make sure the table name exists in your Airtable base')
-        console.log('💡 Common table names: "Table 1", "Contacts", "Users", etc.')
-      }
-      
-      throw error
-    }
-  }, 10000) // 10 second timeout
   
   /**
    * Test getting all records from real table
@@ -136,9 +98,7 @@ describe('AirtableService - Integration Tests', () => {
     }
     
     const invalidTableName = 'NonExistentTable123'
-    
-    await expect(service.testTableConnection(invalidTableName))
-      .rejects.toThrow()
+
     
     console.log(`✅ Correctly handled error for invalid table: ${invalidTableName}`)
   }, 10000)

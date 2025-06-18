@@ -1,4 +1,4 @@
-import Airtable from "airtable";
+import Airtable, { Table } from "airtable";
 
 
 export default class AirtableService{
@@ -52,41 +52,18 @@ export default class AirtableService{
     }
 
     /**
-    * Get the initialized Airtable base instance
-    * @returns {any} The Airtable base instance
-    */
-    public getBase(): any {
-        return this.base;
-    }
-
-    /**
     * Get a specific table from the base
     * @param {string} tableName - The name of the table to retrieve
     * @returns {any} The Airtable table instance
     */
-    public getTable(tableName: string): any {
+    public getTable(tableName: string) {
         if (!this.isInitalized) {
             throw new Error('AirtableService is not initialized')
         }
+
         return this.base(tableName)
     }
 
-    /**
-    * Test connection by attempting to fetch records from a table
-    * @param {string} tableName - The name of the table to test
-    * @returns {Promise<any[]>} Promise that resolves to array of records
-    */
-    public async testTableConnection(tableName: string): Promise<any[]> {
-        try {
-            const table = this.getTable(tableName)
-            const records = await table.select({
-                maxRecords: 1
-            }).firstPage()
-            return records
-        } catch (error) {
-            throw new Error(`Failed to connect to table '${tableName}': ${error instanceof Error ? error.message : 'Unknown error'}`)
-        }
-    }
 
     /**
     * Get all records from a specific table
