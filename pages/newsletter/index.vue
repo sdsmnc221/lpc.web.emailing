@@ -144,10 +144,10 @@
             <!-- Subcribe section -->
             <section
                 id="subcribe-section"
-                class="py-16 bg-[#F0F2F5]"
+                class="py-8 bg-[#F0F2F5]"
             >
                 <div class="max-w-4xl mx-auto px-4 font-sans">
-                    <h2 class="text-3xl font-bold mb-4 text-gray-800">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
                         Abonnez-vous à notre Newsletter !
                     </h2>
                     <p class="text-gray-600 mb-4">
@@ -171,7 +171,7 @@
                                 v-model="email"
                                 placeholder="Votre adresse mail *"
                                 required
-                                class="w-2/4 px-4 py-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                class="w-2/4 px-4 py-3 border-2 border-[#809076]/50 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                             />
                         </div>
                         <div>
@@ -179,25 +179,25 @@
                                 type="text"
                                 v-model="firstName"
                                 placeholder="Votre prénom (facultatif)"
-                                class="w-2/4 px-4 py-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                class="w-2/4 px-4 py-3 border-2 border-[#809076]/50 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                             />
                         </div>
 
                         <div class="space-y-3">
                             <div class="flex items-center">
-                                <input id="histoires-adoption" type="checkbox" v-model="interests.adoptionStories" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <input id="histoires-adoption" type="checkbox" v-model="interests.adoptionStories" class="h-4 w-4 bg-transparent text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                                 <label for="histoires-adoption" class="ml-2 block text-sm text-gray-900">Histoires d'adoption</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="dons-parrainage" type="checkbox" v-model="interests.donationsSponsorships" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <input id="dons-parrainage" type="checkbox" v-model="interests.donationsSponsorships" class="h-4 w-4 bg-transparent text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                                 <label for="dons-parrainage" class="ml-2 block text-sm text-gray-900">Dons et Parrainage</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="benevolat" type="checkbox" v-model="interests.volunteering" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <input id="benevolat" type="checkbox" v-model="interests.volunteering" class="h-4 w-4 bg-transparent text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                                 <label for="benevolat" class="ml-2 block text-sm text-gray-900">Bénévolat</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="actualites" type="checkbox" v-model="interests.lpcNews" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <input id="actualites" type="checkbox" v-model="interests.lpcNews" class="h-4 w-4 bg-transparent text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                                 <label for="actualites" class="ml-2 block text-sm text-gray-900">Actualités Les Petits Clochards</label>
                             </div>
                         </div>
@@ -238,6 +238,12 @@ const subscribe = async () => {
     // Basic validation
     if (!email.value) {
         alert('Veuillez entrer votre adresse e-mail.');
+        return;
+    }
+
+    const selectedInterests = Object.values(interests.value).some(value => value);
+    if (!selectedInterests) {
+        alert('Veuillez sélectionner au moins un centre d\'intérêt.');
         return;
     }
 
