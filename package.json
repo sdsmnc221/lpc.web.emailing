@@ -14,6 +14,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@nuxt/image": "^1.10.0",
     "@tailwindcss/vite": "^4.1.10",
     "@types/airtable": "^0.10.0",
     "airtable": "^0.12.2",
@@ -23,7 +24,6 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-
     "sass-embedded": "^1.89.2",
     "vitest": "^1.0.0"
   }
