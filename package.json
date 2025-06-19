@@ -11,7 +11,8 @@
     "test": "vitest",
     "test:unit": "vitest run tests/**/*.test.ts",
     "test:integration": "vitest run tests/server/services/airtable/*.integration.test.ts",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "slicemachine": "start-slicemachine"
   },
   "dependencies": {
     "@nuxt/image": "^1.10.0",
@@ -24,7 +25,10 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@nuxtjs/prismic": "^4.1.0",
+    "@slicemachine/adapter-nuxt": "^0.3.78",
     "sass-embedded": "^1.89.2",
+    "slice-machine-ui": "^2.16.1",
     "vitest": "^1.0.0"
   }
 }
