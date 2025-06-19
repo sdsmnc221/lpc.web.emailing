@@ -9,4 +9,7 @@ export const components = defineSliceZoneComponents({
   ),
   hero: defineAsyncComponent(() => import("./Hero/index.vue")),
   logo_banner: defineAsyncComponent(() => import("./LogoBanner/index.vue")),
+  social_medias_block: defineAsyncComponent(
+    () => import("./SocialMediasBlock/index.vue"),
+  ),
 });
