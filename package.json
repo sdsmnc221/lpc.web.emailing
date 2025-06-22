@@ -7,16 +7,28 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest",
+    "test:unit": "vitest run tests/**/*.test.ts",
+    "test:integration": "vitest run tests/server/services/airtable/*.integration.test.ts",
+    "test:watch": "vitest",
+    "slicemachine": "start-slicemachine"
   },
   "dependencies": {
+    "@nuxt/image": "^1.10.0",
     "@tailwindcss/vite": "^4.1.10",
+    "@types/airtable": "^0.10.0",
+    "airtable": "^0.12.2",
     "nuxt": "^3.17.5",
     "tailwindcss": "^4.1.10",
     "vue": "^3.5.16",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "sass-embedded": "^1.89.2"
+    "@nuxtjs/prismic": "^4.1.0",
+    "@slicemachine/adapter-nuxt": "^0.3.78",
+    "sass-embedded": "^1.89.2",
+    "slice-machine-ui": "^2.16.1",
+    "vitest": "^1.0.0"
   }
 }

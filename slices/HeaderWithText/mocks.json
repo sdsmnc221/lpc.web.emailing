@@ -1,0 +1,25 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"header": {
+				"__TYPE__": "FieldContent",
+				"value": "sink",
+				"type": "Text"
+			},
+			"text_description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Id do cillum enim aliqua anim voluptate. Lorem ut irure officia."
+						}
+					}
+				]
+			}
+		},
+		"items": []
+	}
+]
