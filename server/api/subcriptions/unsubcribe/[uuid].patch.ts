@@ -1,4 +1,4 @@
-import { fakeSubs } from '../fake-sub'
+import AirtableService from "~/server/services/airtable/airtable";
 
 /**
  * Handle PATCH request to update subscriber preferences by UUID
@@ -17,6 +17,8 @@ export default defineEventHandler(async (event) => {
         
         // Get UUID from route parameters
         const uuid = getRouterParam(event, 'uuid');
+        const airtableService = AirtableService.getInstance()
+
         
         // Validate UUID parameter
         if (!uuid) {
@@ -30,51 +32,47 @@ export default defineEventHandler(async (event) => {
         const body = await readBody(event);
         
         // Find subscriber by UUID
-        const subscriberIndex = fakeSubs.findIndex(sub => sub.uuid === uuid);
-        
-        // Check if subscriber exists
-        if (subscriberIndex === -1) {
+        // const subscriberIndex = fakeSubs.findIndex(sub => sub.uuid === uuid);
+        const subId = await airtableService.getSubcriptionId(uuid);
+        if(!subId){
             throw createError({
                 statusCode: 404,
                 statusMessage: 'Subscriber not found with the provided UUID'
             });
         }
+        console.log(subId)
         
         // Get current subscriber data
-        const currentSubscriber = fakeSubs[subscriberIndex];
+        const subcription = await airtableService.getSubcription(subId);
+        // Update only the provided boolean fields directly on the existing object
+        if (typeof body.historiesAdoption === 'boolean') {
+            subcription.historiesAdoption = Boolean(body.historiesAdoption);
+        }
+        if (typeof body.donEtParrainage === 'boolean') {
+            subcription.donEtParrainage = Boolean(body.donEtParrainage);
+        }
+        if (typeof body.benevolat === 'boolean') {
+            subcription.benevolat = Boolean(body.benevolat);
+        }
+        if (typeof body.actualites === 'boolean') {
+            subcription.actualites = Boolean(body.actualites);
+        }
         
-        // Update only the provided boolean fields
-        const updatedSubscriber = {
-            ...currentSubscriber,
-            // Update historiesAdoption if provided
-            ...(typeof body.historiesAdoption === 'boolean' && { historiesAdoption: body.historiesAdoption }),
-            // Update donEtParrainage if provided
-            ...(typeof body.donEtParrainage === 'boolean' && { donEtParrainage: body.donEtParrainage }),
-            // Update benevolat if provided
-            ...(typeof body.benevolat === 'boolean' && { benevolat: body.benevolat }),
-            // Update actualites if provided
-            ...(typeof body.actualites === 'boolean' && { actualites: body.actualites }),
-            // Update timestamp
-            updateAt: new Date()
-        };
-        
-        // Replace the subscriber in the array
-        fakeSubs[subscriberIndex] = updatedSubscriber;
-        
+        // Update subscription in Airtable
+        const result = await airtableService.updateSubcription(subId, subcription);
+        console.log(`[${new Date().toISOString()}] Subscription updated successfully:`, result);
         // Return success response
         return {
             success: true,
             message: 'Subscriber preferences updated successfully',
             data: {
-                updatedSubscriber,
-                updatedFields: {
-                    ...(typeof body.historiesAdoption === 'boolean' && { historiesAdoption: body.historiesAdoption }),
-                    ...(typeof body.donEtParrainage === 'boolean' && { donEtParrainage: body.donEtParrainage }),
-                    ...(typeof body.benevolat === 'boolean' && { benevolat: body.benevolat }),
-                    ...(typeof body.actualites === 'boolean' && { actualites: body.actualites })
-                }
-            },
-            total: fakeSubs.length
+                email: subcription.email,
+                name: subcription.name,
+                historiesAdoption: result.historiesAdoption,
+                donEtParrainage: result.donEtParrainage,
+                benevolat: result.benevolat,
+                actualites: result.actualites
+            }
         };
         
     } catch (error) {
