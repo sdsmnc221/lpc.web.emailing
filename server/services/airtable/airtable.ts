@@ -1,5 +1,6 @@
 import Airtable from 'airtable';
 import { Contact, PaginatedResponse, PaginationOptions, Subscription } from "./structures/type";
+import AirtableError from 'airtable/lib/airtable_error';
 
 /**
  * Airtable service implementation for managing subscriptions and records
@@ -320,6 +321,20 @@ export class AirtableService {
             pagination: contactsRaw.pagination
         };
         return subscriptions;
+    }
+
+    public async getContactByRecordId(recordId: string): Promise<Contact | null>{
+        try{
+            
+            const table = this.base("Contacts");
+            const record = await table.find(recordId);
+            return Contact.fromRecord(record);
+        }catch(e){
+            if (e instanceof AirtableError){
+                return null;
+            }
+            throw new Error(`Failed to get contact record: ${e instanceof Error ? e.message : 'Unknown error'}`);
+        }
     }
 }
 
