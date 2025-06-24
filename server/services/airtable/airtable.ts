@@ -309,8 +309,17 @@ export class AirtableService {
     }
 
 
-    public async createNewContact(contact: Contact){
-        
+    public async getAllContacts(page: number = 1, size: number = 10): Promise<PaginatedResponse<Contact>>{
+        const contactsRaw = await this.getAllRecords('Contacts', { page, size });
+        const contactsList = contactsRaw.records.map((raw) => {
+            return Contact.fromRecord(raw);
+        });
+
+        const subscriptions: PaginatedResponse<Contact> = {
+            records: contactsList,
+            pagination: contactsRaw.pagination
+        };
+        return subscriptions;
     }
 }
 

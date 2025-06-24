@@ -6,31 +6,37 @@
 export class Contact {
     id?: string;
     email: string;
-    firstName: string;
-    lastName: string;
-    source: "Website" | "HelloAsso" | "Manual";
+    firstName?: string;
+    lastName?: string;
+    source?: "Website" | "HelloAsso" | "Manual";
     subscribed: boolean;
     subscribedDate?: string;
     helloAssoId?: string;
     donorType?: "Parrain" | "Adoptant" | "Donateur" | "Supporter";
-    interests?: string[];
+    lastDonation: number;
+    totalDonations: number;
     lastDonationDate?: string;
     location?: string;
-    notes?: string;
+    phone?: string;
+    createdAt?: string;
+    updatedAt?: string;
 
     constructor(
         email: string,
-        firstName: string,
-        lastName: string,
-        source: "Website" | "HelloAsso" | "Manual",
         subscribed: boolean = false,
+        lastDonation: number = 0,
+        totalDonations: number = 0,
+        firstName?: string,
+        lastName?: string,
+        source?: "Website" | "HelloAsso" | "Manual",
         subscribedDate?: string,
         helloAssoId?: string,
         donorType?: "Parrain" | "Adoptant" | "Donateur" | "Supporter",
-        interests?: string[],
         lastDonationDate?: string,
         location?: string,
-        notes?: string,
+        phone?: string,
+        createdAt: string = new Date().toISOString(),
+        updatedAt: string = new Date().toISOString(),
         id?: string
     ) {
         this.id = id;
@@ -42,27 +48,38 @@ export class Contact {
         this.subscribedDate = subscribedDate;
         this.helloAssoId = helloAssoId;
         this.donorType = donorType;
-        this.interests = interests;
+        this.lastDonation = lastDonation;
+        this.totalDonations = totalDonations;
         this.lastDonationDate = lastDonationDate;
         this.location = location;
-        this.notes = notes;
+        this.phone = phone;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    static fromRecord(record: any): Contact {
+     /**
+     * Create a Contact instance from Airtable record
+     * @param {any} record - Raw Airtable record with id and fields
+     * @returns {Contact} Converted contact object
+     */
+     static fromRecord(record: any): Contact {
         const data = record.fields || record;
         return new Contact(
             data.Email || '',
-            data['First name'] || '',
-            data['Last name'] || '',
-            data.Source || 'Manual',
-            data.Subcribed || false,
-            data['Subcribed Date'],
-            data['HelloAsso Id'],
+            data.Subscribed || false,
+            data['Last Donation'] || 0,
+            data['Total Donations'] || 0,
+            data['First Name'],
+            data['Last Name'],
+            data.Source,
+            data['Subscribed Date'],
+            data['HelloAsso ID'],
             data['Donor Type'],
-            data.Interests,
             data['Last Donation Date'],
             data.Location,
-            data.Notes,
+            data.Phone,
+            data['Created At'] || new Date().toISOString(),
+            data['Updated At'] || new Date().toISOString(),
             record.id
         );
     }
