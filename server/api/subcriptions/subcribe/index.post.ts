@@ -1,5 +1,6 @@
-import { fakeSubs, Subcription } from '../fake-sub'
 import { randomUUID } from "crypto"
+import AirtableService from "~/server/services/airtable/airtable";
+import { Subscription } from "~/server/services/airtable/structures/type";
 /**
  * Handle POST request to add a new subscriber to the fake subscription list
  * @param {any} event - The Nuxt event object containing request data
@@ -16,6 +17,8 @@ export default defineEventHandler(async (event) => {
         }
         
         // Get request body data
+        const airtableService = AirtableService.getInstance()
+
         const body = await readBody(event);
         
         // Validate required fields
@@ -25,42 +28,42 @@ export default defineEventHandler(async (event) => {
                 statusMessage: 'Email is required'
             });
         }
-        
-        // Check if email already exists
-        const existingSubscriber = fakeSubs.find(sub => sub.email === body.email);
-        if (existingSubscriber) {
+
+        // validate if email already subcribe
+        if (await airtableService.checkEmailSubcriberExists(body.email)) {
             throw createError({
-                statusCode: 409,
-                statusMessage: 'Email already exists in subscription list'
+                statusCode: 400,
+                statusMessage: 'Email already subcribed'
+            });
+        }
+
+        // create new subscription
+        const newSubcription = new Subscription(
+            body.email, 
+            body.name || "",
+            randomUUID(),
+            body.historiesAdoption || false,
+            body.donEtParrainage || false,
+            body.benevolat || false,
+            body.actualites || false,
+            new Date().toISOString(),
+            new Date().toISOString(),
+        )
+
+        // add new subcription
+        try {
+            await airtableService.addNewSubcription(newSubcription)
+        } catch (error) {
+            throw createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error: Failed to add subscriber'
             });
         }
         
-        // Generate new ID based on current array length
-        const newId = (fakeSubs.length + 1).toString();
-        const newUuid = randomUUID();
-        // Create new subscriber with data from request body
-        const newSubscriber: Subcription = {
-            id: newId,
-            uuid: newUuid,
-            email: body.email,
-            name: body.name || '',
-            historiesAdoption: body.historiesAdoption ?? false,
-            donEtParrainage: body.donEtParrainage ?? false,
-            benevolat: body.benevolat ?? false,
-            actualites: body.actualites ?? false,
-            createdAt: new Date(),
-            updateAt: new Date()
-        };
-        
-        // Add to the fake subscription list
-        fakeSubs.push(newSubscriber);
-        console.log(fakeSubs)
         // Return success response
         return {
             success: true,
             message: 'Subscriber added successfully',
-            data: newSubscriber,
-            total: fakeSubs.length
         };
     } catch (error) {
         // Handle any errors that occurred

@@ -1,9 +1,9 @@
-import { fakeSubs } from './fake-sub'
+import AirtableService from '~/server/services/airtable/airtable'
+import { Subscription } from '~/server/services/airtable/structures/type'
 
 /**
- * GET endpoint to retrieve all subscribers
- * @returns {Object} Response object containing all subscribers
- * @throws {Error} Returns 500 status code if an error occurs
+ * GET endpoint to retrieve all subscription records from Airtable
+ * @returns {Promise<Object>} Response object containing subscription data
  */
 export default defineEventHandler(async (event) => {
   try {
@@ -15,21 +15,24 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    // Get AirtableService instance
+    const airtableService = AirtableService.getInstance()
+    // Fetch all subscription records from Airtable
+    const subcriptions = await airtableService.getAllSubscriptions(1, 2)
     // Return all subscribers with success status
     return {
-      success: true,
-      data: fakeSubs,
-      total: fakeSubs.length,
-      message: 'Subscribers retrieved successfully'
+      ...subcriptions
     }
   } catch (error: any) {
     // Handle any errors that occur during processing
+    console.error('Error retrieving subscriptions:', error)
+    
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage: error.statusMessage || 'Internal Server Error',
       data: {
         success: false,
-        message: error.message || 'Failed to retrieve subscribers'
+        message: error.message || 'Failed to retrieve subscribers from Airtable'
       }
     })
   }

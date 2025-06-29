@@ -1,20 +1,10 @@
 <template>
     <div
         class="newsletter-page min-h-screen font-sans leading-relaxed text-gray-80 flex flex-col items-center bg-gray-100"
-        
     >
         <!-- Header -->
         <header class="py-4 max-h-[97px] w-screen">
-            <div
-                id="header-container"
-                class="max-w-full mx-auto px-[12px] py-[40px] flex justify-between "
-            >
-                <NuxtImg
-                    src="/img/logo.png"
-                    alt="Logo image"
-                    class="h-[72px] mx-auto block"
-                />
-            </div>
+            
         </header>
         <div
             id="content-container"
@@ -25,6 +15,7 @@
                 id="hero-section"
                 class="bg-gradient-to-br py-8 text-center w-full h-[277px]" 
             >
+            
                 <div class="w-full mx-auto px-4">
                     <div class="flex justify-center gap-4 flex-wrap">
                         <NuxtImg
